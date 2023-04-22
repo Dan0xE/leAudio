@@ -27,8 +27,8 @@ export interface AnalyzerData {
 interface CustomHtmlAudioElement extends HTMLElement {
   play: () => Promise<void>;
   pause: () => void;
-  volumeUp: () => void;
-  volumeDown: () => void;
+  volumeUp?: () => void;
+  volumeDown?: () => void;
   volume: number;
 }
 
@@ -62,7 +62,7 @@ export default function App() {
 
   const audioAnalyzer = () => {
     try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const audioCtx = new (window.AudioContext || window.AudioContext)();
       const analyzer = audioCtx.createAnalyser();
       analyzer.fftSize = 2048;
 
@@ -78,18 +78,14 @@ export default function App() {
       audio.autoplay = true;
       audio.controls = false;
       audio.crossOrigin = "anonymous";
-      audio.loop = true;
+      audio.loop = false;
       audio.preload = "auto";
 
       const source = audioCtx.createMediaElementSource(audio);
       source.connect(analyzer);
       source.connect(audioCtx.destination);
 
-      audio.onended = () => {
-        source.disconnect();
-      };
-
-      audioRef.current = audio;
+      audioRef.current = audio as HTMLAudioElement;
 
       setAnalyzerData({ analyzer, bufferLength, dataArray });
     } catch (e) {
@@ -122,15 +118,15 @@ export default function App() {
     }
   }, [audioUrl]);
 
-  function volumeUp(audioElement: CustomHtmlAudioElement) {
-    if (audioElement.volume < 1) {
-      audioElement.volume += 0.1;
+  function volumeUp() {
+    if (audioRef.current && audioRef.current.volume < 1) {
+      audioRef.current.volume += 0.1;
     }
   }
 
-  function volumeDown(audioElement: CustomHtmlAudioElement) {
-    if (audioElement.volume > 0) {
-      audioElement.volume -= 0.1;
+  function volumeDown() {
+    if (audioRef.current && audioRef.current.volume > 0) {
+      audioRef.current.volume -= 0.1;
     }
   }
 
@@ -192,12 +188,10 @@ export default function App() {
               ref={audioElmRef as LegacyRef<HTMLMediaElement>}
             />
             <div>
-              <button onClick={() => audioElement.play()}>Play</button>
-              <button onClick={() => audioElement.pause()}>Pause</button>
-              <button onClick={() => volumeDown(audioElement)}>
-                Volume Down
-              </button>
-              <button onClick={() => volumeUp(audioElement)}>Volume Up</button>
+              <button onClick={() => audioRef.current!.play()}>Play</button>
+              <button onClick={() => audioRef.current?.pause()}>Pause</button>
+              <button onClick={() => volumeDown()}>Volume Down</button>
+              <button onClick={() => volumeUp()}>Volume Up</button>
             </div>
           </>
         )}
