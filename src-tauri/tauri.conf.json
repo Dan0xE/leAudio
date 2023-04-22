@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "leAudio",
-    "version": "0.0.0"
+    "productName": "le_audio",
+    "version": "0.0.2"
   },
   "tauri": {
     "allowlist": {
@@ -45,7 +45,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "leAudio",
+        "title": "Le-Audio",
         "width": 1200,
         "height": 800,
         "center": true,
