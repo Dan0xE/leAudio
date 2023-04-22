@@ -12,10 +12,25 @@ import MinimizeIcon from "./assets/mdi_window-minimize.svg";
 import MaximizeIcon from "./assets/mdi_window-maximize.svg";
 import CloseIcon from "./assets/mdi_close.svg";
 
+declare global {
+  interface Window {
+    __TAURI__: any;
+  }
+}
+
+const config = (window as any).__TAURI__;
+
 export interface AnalyzerData {
   analyzer: AnalyserNode | { getByteFrequencyData: (arg0: number[]) => void };
   bufferLength: number;
   dataArray: Uint8Array | number[];
+}
+
+interface CustomHtmlAudioElement extends HTMLElement {
+  play: () => Promise<void>;
+  pause: () => void;
+  volumeUp: (delta?: number) => void;
+  volumeDown: (delta?: number) => void;
 }
 
 export default function App() {
@@ -23,6 +38,7 @@ export default function App() {
   const [analyzerData, setAnalyzerData] = useState<AnalyzerData | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const audioElmRef: MutableRefObject<HTMLMediaElement | undefined> = useRef();
+  const audioRef = useRef<CustomHtmlAudioElement | null>(null);
 
   useEffect(() => {
     const minimizeBtn = document.getElementById("titlebar-minimize");
@@ -83,6 +99,31 @@ export default function App() {
     }
   }, [audioUrl]);
 
+  const handlePlayClick = () => {
+    audioRef.current?.play();
+  };
+
+  const handlePauseClick = () => {
+    audioRef.current?.pause();
+  };
+
+  const handleVolumeUpClick = () => {
+    audioRef.current?.volumeUp(10);
+  };
+
+  const handleVolumeDownClick = () => {
+    audioRef.current?.volumeDown(10);
+  };
+
+  useEffect(() => {
+    const audioElement = document.getElementById(
+      "player"
+    ) as CustomHtmlAudioElement;
+    if (audioElement) {
+      audioRef.current = audioElement;
+    }
+  }, []);
+
   return (
     <div>
       {window.__TAURI__ && (
@@ -132,28 +173,10 @@ export default function App() {
               ref={audioElmRef as LegacyRef<HTMLMediaElement>}
             />
             <div>
-              <button onClick={() => document.getElementById("player")!.play()}>
-                Play
-              </button>
-              <button
-                onClick={() => document.getElementById("player")!.pause()}
-              >
-                Pause
-              </button>
-              <button
-                onClick={() =>
-                  (document.getElementById("player")!.volume += 0.1)
-                }
-              >
-                Vol +
-              </button>
-              <button
-                onClick={() =>
-                  (document.getElementById("player")!.volume -= 0.1)
-                }
-              >
-                Vol -
-              </button>
+              <button onClick={handlePlayClick}>Play</button>
+              <button onClick={handlePauseClick}>Pause</button>
+              <button onClick={handleVolumeUpClick}>Volume Up</button>
+              <button onClick={handleVolumeDownClick}>Volume Down</button>
             </div>
           </>
         )}
