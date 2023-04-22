@@ -1,7 +1,16 @@
-import { useRef, useState, MutableRefObject, useEffect } from "react";
+import {
+  useRef,
+  useState,
+  MutableRefObject,
+  useEffect,
+  LegacyRef,
+} from "react";
 import "./styles.css";
 import WaveForm from "./components/WaveForm";
 import { appWindow } from "@tauri-apps/api/window";
+import MinimizeIcon from "./assets/mdi_window-minimize.svg";
+import MaximizeIcon from "./assets/mdi_window-maximize.svg";
+import CloseIcon from "./assets/mdi_close.svg";
 
 export interface AnalyzerData {
   analyzer: AnalyserNode | { getByteFrequencyData: (arg0: number[]) => void };
@@ -31,7 +40,7 @@ export default function App() {
       );
       closeBtn?.removeEventListener("click", () => appWindow.close());
     };
-  }, []);
+  });
 
   const audioAnalyzer = () => {
     try {
@@ -76,6 +85,19 @@ export default function App() {
 
   return (
     <div>
+      {window.__TAURI__ && (
+        <div data-tauri-drag-region className="titlebar">
+          <div className="titlebar-button" id="titlebar-minimize">
+            <img src={MinimizeIcon} alt="minimize" />
+          </div>
+          <div className="titlebar-button" id="titlebar-maximize">
+            <img src={MaximizeIcon} alt="maximize" />
+          </div>
+          <div className="titlebar-button" id="titlebar-close">
+            <img src={CloseIcon} alt="close" />
+          </div>
+        </div>
+      )}
       <h1 className="mt-16 text-3xl">LeAudio</h1>
       <div className="flex items-center justify-center w-screen">
         <div className="w-7/12 h-7/12">
@@ -107,7 +129,7 @@ export default function App() {
               id="player"
               src={audioUrl}
               controls={false}
-              ref={audioElmRef}
+              ref={audioElmRef as LegacyRef<HTMLMediaElement>}
             />
             <div>
               <button onClick={() => document.getElementById("player")!.play()}>
