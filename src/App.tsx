@@ -29,8 +29,9 @@ export interface AnalyzerData {
 interface CustomHtmlAudioElement extends HTMLElement {
   play: () => Promise<void>;
   pause: () => void;
-  volumeUp: (delta?: number) => void;
-  volumeDown: (delta?: number) => void;
+  volumeUp: () => void;
+  volumeDown: () => void;
+  volume: number;
 }
 
 export default function App() {
@@ -39,6 +40,9 @@ export default function App() {
   const [fileName, setFileName] = useState<string>("");
   const audioElmRef: MutableRefObject<HTMLMediaElement | undefined> = useRef();
   const audioRef = useRef<CustomHtmlAudioElement | null>(null);
+  const audioElement = document.getElementById(
+    "player"
+  ) as CustomHtmlAudioElement;
 
   useEffect(() => {
     const minimizeBtn = document.getElementById("titlebar-minimize");
@@ -99,21 +103,17 @@ export default function App() {
     }
   }, [audioUrl]);
 
-  const handlePlayClick = () => {
-    audioRef.current?.play();
-  };
+  function volumeUp(audioElement: CustomHtmlAudioElement) {
+    if (audioElement.volume < 1) {
+      audioElement.volume += 0.1;
+    }
+  }
 
-  const handlePauseClick = () => {
-    audioRef.current?.pause();
-  };
-
-  const handleVolumeUpClick = () => {
-    audioRef.current?.volumeUp(10);
-  };
-
-  const handleVolumeDownClick = () => {
-    audioRef.current?.volumeDown(10);
-  };
+  function volumeDown(audioElement: CustomHtmlAudioElement) {
+    if (audioElement.volume > 0) {
+      audioElement.volume -= 0.1;
+    }
+  }
 
   useEffect(() => {
     const audioElement = document.getElementById(
@@ -173,10 +173,12 @@ export default function App() {
               ref={audioElmRef as LegacyRef<HTMLMediaElement>}
             />
             <div>
-              <button onClick={handlePlayClick}>Play</button>
-              <button onClick={handlePauseClick}>Pause</button>
-              <button onClick={handleVolumeUpClick}>Volume Up</button>
-              <button onClick={handleVolumeDownClick}>Volume Down</button>
+              <button onClick={() => audioElement.play()}>Play</button>
+              <button onClick={() => audioElement.pause()}>Pause</button>
+              <button onClick={() => volumeUp(audioElement)}>Volume Up</button>
+              <button onClick={() => volumeDown(audioElement)}>
+                Volume Down
+              </button>
             </div>
           </>
         )}
