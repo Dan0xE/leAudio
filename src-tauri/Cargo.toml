@@ -1,6 +1,6 @@
 [package]
 name = "le_audio"
-version = "0.0.1"
+version = "0.0.3"
 description = "A simple small Audio Visualizer"
 authors = ["Dan0xE"]
 license = "MIT"
