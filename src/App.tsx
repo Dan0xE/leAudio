@@ -95,9 +95,9 @@ export default function App() {
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setFileName(JSON.stringify(file?.name));
     if (!file) return;
 
+    setFileName(JSON.stringify(file?.name));
     const url = URL.createObjectURL(file);
 
     if (audioRef.current) {
