@@ -18,8 +18,6 @@ declare global {
   }
 }
 
-const config = (window as any).__TAURI__;
-
 export interface AnalyzerData {
   analyzer: AnalyserNode | { getByteFrequencyData: (arg0: number[]) => void };
   bufferLength: number;
