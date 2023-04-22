@@ -62,20 +62,34 @@ export default function App() {
 
   const audioAnalyzer = () => {
     try {
-      const audioCtx = new (window.AudioContext || window.AudioContext)();
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const analyzer = audioCtx.createAnalyser();
       analyzer.fftSize = 2048;
 
       const bufferLength = analyzer.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
 
-      const source = audioCtx.createMediaElementSource(audioElmRef.current!);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+
+      const audio = new Audio();
+      audio.src = audioUrl;
+      audio.autoplay = true;
+      audio.controls = false;
+      audio.crossOrigin = "anonymous";
+      audio.loop = true;
+      audio.preload = "auto";
+
+      const source = audioCtx.createMediaElementSource(audio);
       source.connect(analyzer);
       source.connect(audioCtx.destination);
-      //@ts-ignore | Type is AudioSourceNode
-      source.onended = () => {
+
+      audio.onended = () => {
         source.disconnect();
       };
+
+      audioRef.current = audio;
 
       setAnalyzerData({ analyzer, bufferLength, dataArray });
     } catch (e) {
@@ -90,7 +104,14 @@ export default function App() {
     const file = e.target.files?.[0];
     setFileName(JSON.stringify(file?.name));
     if (!file) return;
-    setAudioUrl(URL.createObjectURL(file));
+
+    const url = URL.createObjectURL(file);
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+
+    setAudioUrl(url);
   };
 
   useEffect(() => {
