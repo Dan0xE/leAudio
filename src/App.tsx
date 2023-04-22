@@ -38,9 +38,6 @@ export default function App() {
   const [fileName, setFileName] = useState<string>("");
   const audioElmRef: MutableRefObject<HTMLMediaElement | undefined> = useRef();
   const audioRef = useRef<CustomHtmlAudioElement | null>(null);
-  const audioElement = document.getElementById(
-    "player"
-  ) as CustomHtmlAudioElement;
 
   useEffect(() => {
     const minimizeBtn = document.getElementById("titlebar-minimize");
