@@ -175,10 +175,10 @@ export default function App() {
             <div>
               <button onClick={() => audioElement.play()}>Play</button>
               <button onClick={() => audioElement.pause()}>Pause</button>
-              <button onClick={() => volumeUp(audioElement)}>Volume Up</button>
               <button onClick={() => volumeDown(audioElement)}>
                 Volume Down
               </button>
+              <button onClick={() => volumeUp(audioElement)}>Volume Up</button>
             </div>
           </>
         )}
