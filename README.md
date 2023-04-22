@@ -1,6 +1,6 @@
 # LeAudio
 
-```A small simple Audio Visualizer```
+```A simple small Audio Visualizer```
 
 
 ## References
