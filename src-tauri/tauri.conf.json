@@ -6,10 +6,6 @@
     "distDir": "../dist",
     "withGlobalTauri": false
   },
-  "package": {
-    "productName": "le_audio",
-    "version": "0.0.3"
-  },
   "tauri": {
     "allowlist": {
       "all": true,
