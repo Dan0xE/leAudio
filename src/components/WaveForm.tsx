@@ -26,19 +26,22 @@ function animateBars(
   const HEIGHT = canvas.height / 2;
 
   var barWidth = Math.ceil(canvas.width / bufferLength) * 2.5;
+
   let barHeight;
   let x = 0;
 
-  for (var i = 0; i < bufferLength; i++) {
-    barHeight = (dataArray[i] / 255) * HEIGHT;
-    const blueShade = Math.floor((dataArray[i] / 255) * 5); // generate a shade of blue based on the audio input
-    const blueHex = ["#61dafb", "#5ac8fa", "#50b6f5", "#419de6", "#20232a"][
-      blueShade
-    ]; // use react logo blue shades
-    canvasCtx.fillStyle = blueHex;
-    canvasCtx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+  for (let i = 0; i < bufferLength; i++) {
+    if(dataArray[i] !== 0) {
+      barHeight = (dataArray[i] / 255) * HEIGHT;
+      const blueShade = Math.floor((dataArray[i] / 255) * 5);
+      const blueHex = ["#61dafb", "#61dafb", "#61dafb", "#61dafb", "#61dafb"][
+        blueShade
+      ]; //@NOTE maybe make them change via params in the UI
+      canvasCtx.fillStyle = blueHex;
+      canvasCtx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
 
-    x += barWidth + 1;
+      x += barWidth + 1;
+    }
   }
 }
 
