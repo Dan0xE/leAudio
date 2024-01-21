@@ -84,7 +84,7 @@ export default function App() {
 
       audioRef.current = audio as HTMLAudioElement;
 
-      setAnalyzerData({ analyzer, bufferLength, dataArray });
+      audioRef.current && setAnalyzerData({ analyzer, bufferLength, dataArray });
     } catch (e) {
       console.error(e);
       alert(
@@ -122,7 +122,7 @@ export default function App() {
   }
 
   function volumeDown() {
-    if (audioRef.current && audioRef.current.volume > 0) {
+    if (audioRef.current && audioRef.current.volume > 0.1) {
       audioRef.current.volume -= 0.1;
     }
   }
@@ -155,7 +155,7 @@ export default function App() {
       <div className="flex items-center justify-center w-screen">
         <div className="w-7/12 h-7/12">
           {audioUrl && (
-            <>{analyzerData && <WaveForm analyzerData={analyzerData!} />}</>
+            <>{(analyzerData && audioRef.current) &&  <WaveForm analyzerData={analyzerData} />}</>
           )}
         </div>
       </div>
