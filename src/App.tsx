@@ -38,6 +38,9 @@ export default function App() {
   const [fileName, setFileName] = useState<string>("");
   const audioElmRef: MutableRefObject<HTMLMediaElement | undefined> = useRef();
   const audioRef = useRef<CustomHtmlAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [firstPlay, setFirstPlay] = useState(true)
+
 
   useEffect(() => {
     const minimizeBtn = document.getElementById("titlebar-minimize");
@@ -72,7 +75,7 @@ export default function App() {
 
       const audio = new Audio();
       audio.src = audioUrl;
-      audio.autoplay = true;
+      audio.autoplay = false;
       audio.controls = false;
       audio.crossOrigin = "anonymous";
       audio.loop = false;
@@ -175,8 +178,9 @@ export default function App() {
         />
         {audioUrl && (
           <>
-            <div className="">
-              <p>Currently Playing: {fileName}</p>
+            <div className="flex flex-col items-center justify-center">
+              {!isPlaying && firstPlay && <p className="animate-pulse">Press Play to Start the Track</p>}
+              {isPlaying ? <p>Currently Playing: {fileName}</p> : <p>Currenlty Paused: {fileName}</p>}
             </div>
             <audio
               id="player"
@@ -185,8 +189,8 @@ export default function App() {
               ref={audioElmRef as LegacyRef<HTMLMediaElement>}
             />
             <div>
-              <button onClick={() => audioRef.current!.play()}>Play</button>
-              <button onClick={() => audioRef.current?.pause()}>Pause</button>
+              <button onClick={() => {audioRef.current!.play(); setIsPlaying(true); setFirstPlay(false)}}>Play</button>
+              <button onClick={() => {audioRef.current?.pause(); setIsPlaying(false)}}>Pause</button>
               <button onClick={() => volumeDown()}>Volume Down</button>
               <button onClick={() => volumeUp()}>Volume Up</button>
             </div>
