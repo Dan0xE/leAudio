@@ -75,7 +75,7 @@ export default function App() {
 
       const audio = new Audio();
       audio.src = audioUrl;
-      audio.autoplay = false;
+      audio.autoplay = firstPlay ? false : true;
       audio.controls = false;
       audio.crossOrigin = "anonymous";
       audio.loop = false;
