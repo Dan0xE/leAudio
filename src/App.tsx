@@ -180,7 +180,7 @@ export default function App() {
           <>
             <div className="flex flex-col items-center justify-center">
               {!isPlaying && firstPlay && <p className="animate-pulse">Press Play to Start the Track</p>}
-              {isPlaying ? <p>Currently Playing: {fileName}</p> : <p>Currenlty Paused: {fileName}</p>}
+              {isPlaying ? <p>Currently Playing: {fileName}</p> : <p>Currently Paused: {fileName}</p>}
             </div>
             <audio
               id="player"
